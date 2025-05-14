@@ -1,0 +1,8 @@
+pandas
+numpy
+scikit-learn
+joblib
+apache-airflow
+dvc
+mlflow
+flask
