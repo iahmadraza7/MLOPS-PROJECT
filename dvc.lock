@@ -1,0 +1,51 @@
+schema: '2.0'
+stages:
+  extract:
+    cmd: python -c "import pandas as pd; df = pd.read_csv('data/raw/ODI_Cricket_Data.csv');
+      df.to_csv('data/processed/raw.csv', index=False)"
+    deps:
+    - path: data/raw/ODI_Cricket_Data.csv
+      hash: md5
+      md5: 4d843e06d13b380a178b1bd405e04427
+      size: 824
+    outs:
+    - path: data/processed/raw.csv
+      hash: md5
+      md5: 4d843e06d13b380a178b1bd405e04427
+      size: 824
+  preprocess:
+    cmd: python src/preprocess.py --input data/processed/raw.csv --output data/processed/cleaned_data.csv
+    deps:
+    - path: data/processed/raw.csv
+      hash: md5
+      md5: 4d843e06d13b380a178b1bd405e04427
+      size: 824
+    - path: src/preprocess.py
+      hash: md5
+      md5: 0b6562b8f1416428350f4ba8d5602e11
+      size: 2869
+    outs:
+    - path: data/processed/cleaned_data.csv
+      hash: md5
+      md5: 4d843e06d13b380a178b1bd405e04427
+      size: 824
+  train_model:
+    cmd: python src/train_model.py
+    deps:
+    - path: data/processed/cleaned_data.csv
+      hash: md5
+      md5: 4d843e06d13b380a178b1bd405e04427
+      size: 824
+    - path: src/train_model.py
+      hash: md5
+      md5: 8a5d6a0edf7a1e813695da16cea62e93
+      size: 7025
+    outs:
+    - path: metrics/model_metrics.json
+      hash: md5
+      md5: a1348aacea9d17ccc0fe697cafc1d934
+      size: 122
+    - path: models/cricket_model.pkl
+      hash: md5
+      md5: 3a364022312e5ee5eba80487c08ea8c8
+      size: 929

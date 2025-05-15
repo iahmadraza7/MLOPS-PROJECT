@@ -1,0 +1,26 @@
+stages:
+  extract:
+    cmd: python -c "import pandas as pd; df = pd.read_csv('data/raw/ODI_Cricket_Data.csv'); df.to_csv('data/processed/raw.csv', index=False)"
+    deps:
+      - data/raw/ODI_Cricket_Data.csv
+    outs:
+      - data/processed/raw.csv
+  
+  preprocess:
+    cmd: python src/preprocess.py --input data/processed/raw.csv --output data/processed/cleaned_data.csv
+    deps:
+      - src/preprocess.py
+      - data/processed/raw.csv
+    outs:
+      - data/processed/cleaned_data.csv
+  
+  train_model:
+    cmd: python src/train_model.py
+    deps:
+      - src/train_model.py
+      - data/processed/cleaned_data.csv
+    outs:
+      - models/cricket_model.pkl
+    metrics:
+      - metrics/model_metrics.json:
+          cache: false

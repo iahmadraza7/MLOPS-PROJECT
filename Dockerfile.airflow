@@ -1,0 +1,19 @@
+FROM apache/airflow:2.6.0
+
+USER root
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+         build-essential \
+  && apt-get autoremove -yqq --purge \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+
+# Install Python packages
+COPY requirements-airflow.txt /tmp/requirements-airflow.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-airflow.txt
+
+# Create necessary directories
+RUN mkdir -p /opt/airflow/data/raw /opt/airflow/data/processed \
+    /opt/airflow/models /opt/airflow/metrics /opt/airflow/mlflow 

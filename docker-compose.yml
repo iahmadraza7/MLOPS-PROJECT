@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Prediction service
+  prediction:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+    command: predict --help
+    tty: true
+    stdin_open: true
+    networks:
+      - mlops-network
+
+  # MLflow for experiment tracking
+  mlflow:
+    image: python:3.9-slim
+    command: bash -c "pip install mlflow==2.4.0 psycopg2-binary && mlflow server --host 0.0.0.0 --backend-store-uri sqlite:///mlflow.db"
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow:/mlflow
+    networks:
+      - mlops-network
+
+  # Frontend Streamlit application
+  streamlit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: streamlit run app_streamlit.py
+    ports:
+      - "8501:8501"
+    depends_on:
+      - prediction
+    volumes:
+      - ./:/app
+    networks:
+      - mlops-network
+
+  # Monitoring Stack (single container with Prometheus)
+  monitoring:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"  # Prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - mlops-network
+
+networks:
+  mlops-network:
+    driver: bridge 

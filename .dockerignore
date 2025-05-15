@@ -1,0 +1,77 @@
+# Git
+.git
+.gitignore
+.github
+
+# Docker
+.docker
+.dockerignore
+docker-compose.yml
+Dockerfile*
+
+# Python
+*.py[cod]
+*$py.class
+__pycache__/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv
+.env
+.venv
+env/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# MLflow
+mlruns/
+mlflow/
+
+# DVC
+.dvc/cache/
+dvc_remote/
+dvc_plots/
+
+# Airflow
+airflow/logs/
+
+# Kubernetes
+.kube/
+
+# Exceptions - keep these files
+!data/raw/ODI_Cricket_Data.csv
+!requirements.txt 
